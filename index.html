@@ -232,7 +232,6 @@
       50% { opacity: 1; transform: scaleY(1.2); }
     }
 
-    /* SECTION BASE */
     section { padding: 6rem 5vw; }
 
     .section-tag {
@@ -253,8 +252,7 @@
     }
 
     .section-title.light { color: var(--white); }
-
-    /* STORY */
+    
     .story {
       background: var(--white);
       display: grid;
@@ -334,8 +332,7 @@
       background: var(--gold);
       flex-shrink: 0;
     }
-
-    /* MENU */
+    
     .menu-section {
       background: var(--dark);
       padding: 6rem 5vw;
@@ -505,7 +502,6 @@
       line-height: 1.7;
     }
 
-    /* GALLERY */
     .gallery-section {
       padding: 0;
       display: grid;
@@ -540,7 +536,6 @@
 
     .gallery-item:hover .gallery-overlay { opacity: 1; }
 
-    /* CONTACT */
     .contact-section {
       background: var(--mid);
       padding: 6rem 5vw;
@@ -582,8 +577,7 @@
       font-size: 1rem;
       font-weight: 500;
     }
-
-    /* APP BADGES */
+    
     .app-section {
       position: sticky;
       bottom: 1rem;
@@ -722,7 +716,6 @@
     }
     .cart-count.visible { opacity: 1; transform: scale(1); }
 
-    /* CART DRAWER */
     .cart-overlay {
       position: fixed;
       inset: 0;
@@ -887,7 +880,6 @@
     }
     .cart-clear-btn:hover { color: #ff6b6b; border-color: rgba(255,100,100,0.4); }
 
-    /* RESPONSIVE */
     @media (max-width: 900px) {
       .story { grid-template-columns: 1fr; gap: 3rem; }
       .story-badge { right: 1rem; bottom: -1rem; }
@@ -903,7 +895,7 @@
       footer { flex-direction: column; text-align: center; }
       .footer-links { flex-wrap: wrap; justify-content: center; }
     }
-    /* EXPERIENCE */
+
 .experience {
   background: var(--cream);
   padding: 6rem 5vw;
@@ -930,7 +922,6 @@
   box-shadow: 0 16px 48px rgba(200, 151, 58, 0.15);
 }
 
-/* Image container — fixed height, image fills it */
 .exp-img-wrap {
   position: relative;
   width: 100%;
@@ -950,7 +941,6 @@
   transform: scale(1.06);
 }
 
-/* Subtle dark gradient over bottom of image */
 .exp-img-overlay {
   position: absolute;
   inset: 0;
@@ -961,13 +951,11 @@
   );
 }
 
-/* Text body below image */
 .exp-card-body {
   padding: 1.6rem 1.5rem 1.8rem;
   position: relative;
 }
 
-/* Gold step number */
 .exp-number {
   display: block;
   font-size: 0.68rem;
@@ -992,7 +980,6 @@
   line-height: 1.75;
 }
 
-/* Responsive */
 @media (max-width: 900px) {
   .exp-grid {
     grid-template-columns: 1fr;
@@ -1006,8 +993,7 @@
   </style>
 </head>
 <body>
-
-  <!-- NAV -->
+  
   <nav>
     <a class="nav-logo" href="#">    <img
           src="Raha logo.png"
@@ -1027,8 +1013,7 @@
       <a class="nav-order" href="#menu">Order Now</a>
     </div>
   </nav>
-
-  <!-- CART OVERLAY + DRAWER -->
+  
   <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
   <div class="cart-drawer" id="cartDrawer">
     <div class="cart-header">
@@ -1048,7 +1033,6 @@
     </div>
   </div>
 
-  <!-- HERO -->
   <section class="hero" id="home">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
@@ -1063,8 +1047,7 @@
     </div>
 
   </section>
-
-  <!-- STORY -->
+  
   <section id="story" style="padding: 7rem 5vw; background: var(--white);">
     <div class="story">
       <div class="story-img-wrap">
@@ -1100,7 +1083,6 @@
     </div>
   </section>
 
-  <!-- MENU -->
   <section class="menu-section" id="menu">
     <div class="menu-header">
       <p class="section-tag">What We Serve</p>
@@ -1119,16 +1101,13 @@
     </div>
 
     <div class="menu-grid" id="menuGrid">
-      <!-- Cards injected by JS -->
     </div>
 
     <div class="menu-cta">
       <a href="#contact" class="btn-primary">Order via Phone</a>
     </div>
   </section>
-
-  <!-- EXPERIENCE -->
-  <!-- EXPERIENCE -->
+  
 <section class="experience" id="experience">
   <div style="text-align:center;margin-bottom:0.5rem;">
     <p class="section-tag">Why Raha</p>
@@ -1187,7 +1166,6 @@
   </div>
 </section>
 
-  <!-- GALLERY -->
   <div class="gallery-section">
     <div class="gallery-item tall">
       <img src="Pepsi.png" />
@@ -1215,7 +1193,6 @@
     </div>
   </div>
 
-  <!-- CONTACT -->
   <section class="contact-section" id="contact">
     <p class="section-tag" style="color:var(--gold-lt);">Get in Touch</p>
     <h2 class="section-title light">Visit or Order</h2>
@@ -1236,8 +1213,7 @@
     </div>
     <a href="tel:+254700123456" class="btn-primary">Call to Order</a>
   </section>
-
-  <!-- FOOTER -->
+  
   <footer>
     <div class="nav-logo">   <img
           src="Raha logo.png"
@@ -1255,8 +1231,8 @@
   </footer>
 
   <script>
-    // ── CART STATE ──────────────────────────────────────────────────────────
-    let cart = {}; // { itemName: { ...itemData, qty } }
+   
+    let cart = {}; 
 
     function toggleCart() {
       const overlay = document.getElementById('cartOverlay');
@@ -1274,11 +1250,10 @@
       const totalEl   = document.getElementById('cartTotal');
       const waBtn     = document.getElementById('whatsappBtn');
 
-      // Badge
+    
       countEl.textContent = totalQty;
       countEl.classList.toggle('visible', totalQty > 0);
 
-      // List
       if (totalQty === 0) {
         listEl.innerHTML = `
           <div class="cart-empty">
@@ -1307,12 +1282,11 @@
       footerEl.style.display = 'block';
       totalEl.textContent = `KES ${totalKES.toLocaleString()}`;
 
-      // WhatsApp message
       const lines = Object.values(cart)
         .map(i => `• ${i.name} x${i.qty} — KES ${(i.numPrice * i.qty).toLocaleString()}`)
         .join('%0A');
       const msg = `Hello Raha Restaurant! I'd like to place an order:%0A%0A${lines}%0A%0A*Total: KES ${totalKES.toLocaleString()}*%0A%0APlease confirm availability. Thank you!`;
-      waBtn.href = `https://wa.me/254700123456?text=${msg}`;
+      waBtn.href = `https://wa.me/254791511386?text=${msg}`;
     }
 
     function addToCart(name) {
