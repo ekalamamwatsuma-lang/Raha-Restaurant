@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raha Restaurant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:    #C8973A;
+      --gold-lt: #E8B558;
+      --cream:   #FAF7F2;
+      --dark:    #1A1208;
+      --mid:     #3D2B0E;
+      --light:   #F0E8D8;
+      --white:   #FFFFFF;
+      --text:    #2E1D06;
+      --muted:   #7A6245;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      height: 72px;
+      background: rgba(26,18,8,0.92);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      display: block;
+      height: 42px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.85);
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold-lt); }
+
+    .nav-order {
+      background: var(--gold);
+      color: var(--dark);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.4rem;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .nav-order:hover { background: var(--gold-lt); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://www.albaik.com/assets/hero/home_hero_new_1400-d5bb20bf4a5a8eaa19d22379497bd57b11272c75d0efab0f86dd34248072a596.jpg');
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.05);
+      transition: transform 6s ease;
+    }
+
+    .hero:hover .hero-bg { transform: scale(1); }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(26,18,8,0.55) 0%,
+        rgba(26,18,8,0.35) 40%,
+        rgba(26,18,8,0.75) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      text-align: center;
+      padding: 0 1.5rem;
+      max-width: 800px;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      font-weight: 500;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 4.5vw, 7rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-title span { color: var(--gold-lt); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.8);
+      font-weight: 300;
+      line-height: 1.6;
+      margin-bottom: 2.4rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--dark);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.9rem 2.2rem;
+      border-radius: 15px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background: var(--gold-lt); transform: translateY(-1px); }
+
+    .btn-outline {
+      border: 1.5px solid rgba(255,255,255,0.6);
+      color: var(--white);
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.9rem 2.2rem;
+      border-radius: 15px;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--gold-lt); color: var(--gold-lt); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(200,151,58,0.7), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+
+    /* SECTION BASE */
+    section { padding: 6rem 5vw; }
+
+    .section-tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.15;
+    }
+
+    .section-title.light { color: var(--white); }
+
+    /* STORY */
+    .story {
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .story-img-wrap {
+      position: relative;
+    }
+
+    .story-img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .story-badge {
+      position: absolute;
+      bottom: -1.5rem;
+      right: -1.5rem;
+      width: 120px;
+      height: 120px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      color: var(--dark);
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    .story-badge strong { font-size: 2rem; line-height: 1; font-weight: 900; }
+    .story-badge span { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .story-text .section-tag { margin-top: 0; }
+
+    .story-body {
+      font-size: 1.02rem;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-top: 1.4rem;
+    }
+
+    .story-values {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .value-chip {
+      border: 1px solid var(--light);
+      border-radius: 3px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--mid);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .value-chip::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* MENU */
+    .menu-section {
+      background: var(--dark);
+      padding: 6rem 5vw;
+    }
+
+    .menu-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .menu-header .section-tag { color: var(--gold-lt); }
+
+    .menu-tabs {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .tab {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.6);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .tab.active, .tab:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--dark);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .menu-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.25s, border-color 0.25s;
+      cursor: pointer;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(200,151,58,0.5);
+    }
+
+    .menu-card-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .menu-card-body {
+      padding: 1rem 1.1rem 1.2rem;
+    }
+
+    .menu-card-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+
+    .menu-card-desc {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.5;
+    }
+
+    .menu-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.9rem;
+    }
+
+    .menu-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold-lt);
+    }
+
+    .add-btn {
+      background: var(--gold);
+      border: none;
+      color: var(--dark);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 0.4rem 0.9rem;
+      border-radius: 2px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .add-btn:hover { background: var(--gold-lt); }
+
+    .menu-cta {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    /* EXPERIENCE */
+    .experience {
+      background: var(--cream);
+      padding: 6rem 5vw;
+    }
+
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 3rem auto 0;
+    }
+
+    .exp-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      border: 1px solid var(--light);
+      border-radius: 4px;
+      background: var(--white);
+      transition: box-shadow 0.25s;
+    }
+
+    .exp-card:hover { box-shadow: 0 8px 40px rgba(200,151,58,0.12); }
+
+    .exp-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .exp-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.7rem;
+    }
+
+    .exp-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* GALLERY */
+    .gallery-section {
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 300px 300px;
+    }
+
+    .gallery-item {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      display: block;
+    }
+
+    .gallery-item:hover img { transform: scale(1.07); }
+
+    .gallery-item.tall { grid-row: span 2; }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,18,8,0.5) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    /* CONTACT */
+    .contact-section {
+      background: var(--mid);
+      padding: 6rem 5vw;
+      text-align: center;
+    }
+
+    .contact-section .section-title.light { margin-bottom: 1rem; }
+
+    .contact-sub {
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      max-width: 460px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .contact-grid {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .contact-item {
+      color: var(--white);
+    }
+
+    .contact-item-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-item-value {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    /* APP BADGES */
+    .app-section {
+      position: sticky;
+      bottom: 1rem;
+      z-index: 90;
+      margin: 0 5vw 1rem;
+      background: rgba(26, 18, 8, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
+    }
+
+    .app-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+
+    .app-text p {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.88rem;
+    }
+
+    .app-badges {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .app-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 3px;
+      padding: 0.7rem 1.3rem;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .app-badge:hover { background: rgba(200,151,58,0.15); }
+    .app-badge-icon { font-size: 1.4rem; }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 2.5rem 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--gold-lt); }
+
+    .footer-copy {
+      color: rgba(255,255,255,0.25);
+      font-size: 0.78rem;
+    }
+
+    /* CART ICON IN NAV */
+    .nav-cart-btn {
+      position: relative;
+      background: transparent;
+      border: 1.5px solid rgba(200,151,58,0.5);
+      color: var(--gold-lt);
+      font-size: 1.25rem;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+      margin-right: 0.8rem;
+      flex-shrink: 0;
+    }
+    .nav-cart-btn:hover { background: rgba(200,151,58,0.15); border-color: var(--gold-lt); }
+    .cart-count {
+      position: absolute;
+      top: -5px; right: -5px;
+      background: var(--gold);
+      color: var(--dark);
+      font-size: 0.6rem;
+      font-weight: 800;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .cart-count.visible { opacity: 1; transform: scale(1); }
+
+    /* CART DRAWER */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      backdrop-filter: blur(4px);
+    }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0; right: 0;
+      width: min(420px, 100vw);
+      height: 100vh;
+      background: var(--dark);
+      border-left: 1px solid rgba(255,255,255,0.08);
+      z-index: 201;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+    }
+    .cart-drawer.open { transform: translateX(0); }
+
+    .cart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .cart-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .cart-close {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.2rem 0.4rem;
+      transition: color 0.2s;
+    }
+    .cart-close:hover { color: var(--gold-lt); }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.5rem;
+    }
+    .cart-items::-webkit-scrollbar { width: 4px; }
+    .cart-items::-webkit-scrollbar-track { background: transparent; }
+    .cart-items::-webkit-scrollbar-thumb { background: rgba(200,151,58,0.3); border-radius: 2px; }
+
+    .cart-empty {
+      text-align: center;
+      padding: 4rem 0;
+      color: rgba(255,255,255,0.3);
+    }
+    .cart-empty .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .cart-empty p { font-size: 0.9rem; }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .cart-item-img {
+      width: 52px; height: 52px;
+      object-fit: cover;
+      border-radius: 3px;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.05);
+    }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 0.2rem;
+    }
+    .cart-item-price { font-size: 0.8rem; color: var(--gold-lt); font-weight: 600; }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .qty-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white);
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .qty-btn:hover { background: rgba(200,151,58,0.25); }
+    .qty-val { color: var(--white); font-size: 0.85rem; font-weight: 600; min-width: 16px; text-align: center; }
+
+    .cart-footer {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 1.2rem 1.5rem 1.6rem;
+    }
+    .cart-subtotal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .cart-subtotal span { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+    .cart-subtotal strong { color: var(--gold-lt); font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+
+    .cart-order-btn {
+      display: block;
+      width: 100%;
+      background: #25D366;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-align: center;
+      padding: 0.9rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 0.6rem;
+    }
+    .cart-order-btn:hover { background: #1ebe5a; transform: translateY(-1px); }
+    .cart-clear-btn {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.4);
+      font-size: 0.78rem;
+      padding: 0.6rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .cart-clear-btn:hover { color: #ff6b6b; border-color: rgba(255,100,100,0.4); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .story { grid-template-columns: 1fr; gap: 3rem; }
+      .story-badge { right: 1rem; bottom: -1rem; }
+      .exp-grid { grid-template-columns: 1fr; }
+      .gallery-section { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item.tall { grid-row: span 1; }
+      nav .nav-links { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .gallery-section { grid-template-columns: 1fr; }
+      .contact-grid { gap: 2rem; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+    /* EXPERIENCE */
+.experience {
+  background: var(--cream);
+  padding: 6rem 5vw;
+}
+
+.exp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 3rem auto 0;
+}
+
+.exp-card {
+  background: var(--white);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--light);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.exp-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(200, 151, 58, 0.15);
+}
+
+/* Image container — fixed height, image fills it */
+.exp-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.exp-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.exp-card:hover .exp-img {
+  transform: scale(1.06);
+}
+
+/* Subtle dark gradient over bottom of image */
+.exp-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(26, 18, 8, 0.45) 100%
+  );
+}
+
+/* Text body below image */
+.exp-card-body {
+  padding: 1.6rem 1.5rem 1.8rem;
+  position: relative;
+}
+
+/* Gold step number */
+.exp-number {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.exp-card-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 0.6rem;
+}
+
+.exp-card-body p {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .exp-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+  }
+
+  .exp-img-wrap {
+    height: 200px;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">    <img
+          src="Raha logo.png"
+          alt="RAHA"
+        /></a>
+    <ul class="nav-links">
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#menu">Our Menu</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <button class="nav-cart-btn" onclick="toggleCart()" aria-label="View cart">
+        🛒
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <a class="nav-order" href="#menu">Order Now</a>
+    </div>
+  </nav>
+
+  <!-- CART OVERLAY + DRAWER -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>🛒 Your Order</h3>
+      <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItemsList"></div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <strong id="cartTotal">KES 0</strong>
+      </div>
+      <a class="cart-order-btn" id="whatsappBtn" href="#" target="_blank">
+        📲 Order via WhatsApp
+      </a>
+      <button class="cart-clear-btn" onclick="clearCart()">Clear Order</button>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Welcome to Raha Restaurant</p>
+      <h1 class="hero-title">Fast Food.<span>Great Taste.</span> Pure Raha.</h1>
+      <p class="hero-sub">Authentic flavours, crafted with love — bringing warmth and comfort to your table since 2010.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn-primary">Explore Menu</a>
+        <a href="#story" class="btn-outline">Our Story</a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- STORY -->
+  <section id="story" style="padding: 7rem 5vw; background: var(--white);">
+    <div class="story">
+      <div class="story-img-wrap">
+        <img
+          class="story-img"
+          src="Our story.png"
+          alt="Raha Restaurant kitchen heritage"
+        />
+        <div class="story-badge">
+          <strong>16</strong>
+          <span>Years<br>of Flavour</span>
+        </div>
+      </div>
+      <div class="story-text">
+        <p class="section-tag">Since 2010</p>
+        <h2 class="section-title">Our Story</h2>
+        <p class="story-body">
+          Raha was born from a simple belief — that food should bring people peace, joy, and a sense of home.
+          Founded in Nyali, Mombasa in 2010 as Prem Restaurant, we set out to serve high-quality, flavourful meals in a warm and welcoming space,
+          making every guest feel like family.
+        </p>
+        <p class="story-body">
+          From our signature broasted chicken to our fresh-made sides, every dish is prepared with care, using the finest
+          ingredients and time-honoured recipes passed down through generations.
+        </p>
+        <div class="story-values">
+          <div class="value-chip">Quality Ingredients</div>
+          <div class="value-chip">Honest Recipes</div>
+          <div class="value-chip">Warm Hospitality</div>
+          <div class="value-chip">Community First</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu-section" id="menu">
+    <div class="menu-header">
+      <p class="section-tag">What We Serve</p>
+      <h2 class="section-title light">Our Menu</h2>
+      <p style="color:rgba(255,255,255,0.5);margin-top:0.8rem;font-size:0.95rem;">
+        Bold flavours, generous portions, made fresh every day.
+      </p>
+    </div>
+
+    <div class="menu-tabs">
+      <button class="tab active" onclick="filterMenu('all', this)">All</button>
+      <button class="tab" onclick="filterMenu('chicken', this)">Chicken</button>
+      <button class="tab" onclick="filterMenu('seafood', this)">Seafood</button>
+      <button class="tab" onclick="filterMenu('sides', this)">Sides</button>
+      <button class="tab" onclick="filterMenu('drinks', this)">Drinks</button>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+      <!-- Cards injected by JS -->
+    </div>
+
+    <div class="menu-cta">
+      <a href="#contact" class="btn-primary">Order via Phone</a>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div style="text-align:center;margin-bottom:0.5rem;">
+    <p class="section-tag">Why Raha</p>
+    <h2 class="section-title">The Raha Experience</h2>
+  </div>
+  <div class="exp-grid">
+
+    <div class="exp-card">
+      <div class="exp-img-wrap">
+        <img
+          src="https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=600&q=80"
+          alt="Signature Broast Chicken"
+          class="exp-img"
+        />
+        <div class="exp-img-overlay"></div>
+      </div>
+      <div class="exp-card-body">
+        <span class="exp-number">01</span>
+        <h3>Signature Broast</h3>
+        <p>Our perfectly broasted chicken is crispy outside, juicy inside — marinated for 24 hours using our secret spice blend.</p>
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <div class="exp-img-wrap">
+        <img
+          src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80"
+          alt="Fresh ingredients daily"
+          class="exp-img"
+        />
+        <div class="exp-img-overlay"></div>
+      </div>
+      <div class="exp-card-body">
+        <span class="exp-number">02</span>
+        <h3>Fresh Every Day</h3>
+        <p>We prepare our sauces, salads, and sides fresh daily. No frozen shortcuts — only honest, wholesome ingredients.</p>
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <div class="exp-img-wrap">
+        <img
+          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
+          alt="Fast home delivery"
+          class="exp-img"
+        />
+        <div class="exp-img-overlay"></div>
+      </div>
+      <div class="exp-card-body">
+        <span class="exp-number">03</span>
+        <h3>Home Delivery</h3>
+        <p>Enjoy Raha from the comfort of your home. Fast, reliable delivery across Nairobi — hot meals at your door.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+  <!-- GALLERY -->
+  <div class="gallery-section">
+    <div class="gallery-item tall">
+      <img src="Pepsi.png" />
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="Fresh Lemonade.png" alt="Kitchen heritage" />
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="Grilled Chicken.png" alt="Our purpose" />
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="Chicken Fillet Burger.png" alt="Food spread" style="filter:brightness(0.7) saturate(1.2);" />
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="COLESAW.jpg" alt="Dining experience" style="filter:brightness(0.85);" />
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="7up drink.png" alt="Dining experience" style="filter:brightness(0.85);" />
+      <div class="gallery-overlay"></div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <p class="section-tag" style="color:var(--gold-lt);">Get in Touch</p>
+    <h2 class="section-title light">Visit or Order</h2>
+    <p class="contact-sub">We'd love to serve you. Walk in, call ahead, or order online — Raha is always ready.</p>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <div class="contact-item-label">Phone</div>
+        <div class="contact-item-value">+254 700 123 456</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">Location</div>
+        <div class="contact-item-value">Nyali, Mombasa, Kenya</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-label">Hours</div>
+        <div class="contact-item-value">Daily 10 AM – 11 PM</div>
+      </div>
+    </div>
+    <a href="tel:+254700123456" class="btn-primary">Call to Order</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="nav-logo">   <img
+          src="Raha logo.png"
+          alt="RAHA"
+        /></div>
+    <ul class="footer-links">
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms</a></li>
+    </ul>
+    <p class="footer-copy">© 2026 Raha Restaurant. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ── CART STATE ──────────────────────────────────────────────────────────
+    let cart = {}; // { itemName: { ...itemData, qty } }
+
+    function toggleCart() {
+      const overlay = document.getElementById('cartOverlay');
+      const drawer  = document.getElementById('cartDrawer');
+      overlay.classList.toggle('open');
+      drawer.classList.toggle('open');
+    }
+
+    function updateCartUI() {
+      const totalQty  = Object.values(cart).reduce((s, i) => s + i.qty, 0);
+      const totalKES  = Object.values(cart).reduce((s, i) => s + i.numPrice * i.qty, 0);
+      const countEl   = document.getElementById('cartCount');
+      const listEl    = document.getElementById('cartItemsList');
+      const footerEl  = document.getElementById('cartFooter');
+      const totalEl   = document.getElementById('cartTotal');
+      const waBtn     = document.getElementById('whatsappBtn');
+
+      // Badge
+      countEl.textContent = totalQty;
+      countEl.classList.toggle('visible', totalQty > 0);
+
+      // List
+      if (totalQty === 0) {
+        listEl.innerHTML = `
+          <div class="cart-empty">
+            <div class="empty-icon">🍽️</div>
+            <p>Your order is empty.<br>Add something delicious!</p>
+          </div>`;
+        footerEl.style.display = 'none';
+        return;
+      }
+
+      listEl.innerHTML = Object.values(cart).map(item => `
+        <div class="cart-item">
+          <img class="cart-item-img" src="${item.img}" alt="${item.name}" />
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">KES ${(item.numPrice * item.qty).toLocaleString()}</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
+            <span class="qty-val">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      footerEl.style.display = 'block';
+      totalEl.textContent = `KES ${totalKES.toLocaleString()}`;
+
+      // WhatsApp message
+      const lines = Object.values(cart)
+        .map(i => `• ${i.name} x${i.qty} — KES ${(i.numPrice * i.qty).toLocaleString()}`)
+        .join('%0A');
+      const msg = `Hello Raha Restaurant! I'd like to place an order:%0A%0A${lines}%0A%0A*Total: KES ${totalKES.toLocaleString()}*%0A%0APlease confirm availability. Thank you!`;
+      waBtn.href = `https://wa.me/254700123456?text=${msg}`;
+    }
+
+    function addToCart(name) {
+      const item = menuItems.find(i => i.name === name);
+      if (!item) return;
+
+      const numPrice = parseInt(item.price.replace(/[^0-9]/g, ''), 10);
+      if (cart[name]) {
+        cart[name].qty++;
+      } else {
+        cart[name] = { ...item, numPrice, qty: 1 };
+      }
+
+      updateCartUI();
+
+      // Toast
+      const toast = document.createElement('div');
+      toast.textContent = `✓ ${name} added to order`;
+      toast.style.cssText = `
+        position:fixed;bottom:2rem;right:2rem;z-index:999;
+        background:#C8973A;color:#1A1208;
+        font-weight:700;font-size:0.85rem;
+        padding:0.75rem 1.4rem;border-radius:3px;
+        box-shadow:0 4px 20px rgba(0,0,0,0.3);
+        animation:fadeInUp 0.3s ease;
+        pointer-events:none;
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2200);
+    }
+
+    function changeQty(name, delta) {
+      if (!cart[name]) return;
+      cart[name].qty += delta;
+      if (cart[name].qty <= 0) delete cart[name];
+      updateCartUI();
+    }
+
+    function clearCart() {
+      cart = {};
+      updateCartUI();
+    }
+
+    // ── MENU DATA ────────────────────────────────────────────────────────────
+    const menuItems = [
+      { name: "Signature Broast Chicken", desc: "8 pieces, perfectly seasoned & crispy", price: "KES 950", cat: "chicken",
+        img: "https://www.albaik.com/assets/hero/home_hero_new_1400-d5bb20bf4a5a8eaa19d22379497bd57b11272c75d0efab0f86dd34248072a596.jpg" },
+      { name: "Chicken Fillet Burger", desc: "Juicy fillet, garlic sauce, fresh bun", price: "KES 420", cat: "chicken",
+        img: "chicken fillet burger.png" },
+      { name: "4-Piece Chicken Meal", desc: "With fries, coleslaw & garlic sauce", price: "KES 650", cat: "chicken",
+        img: "4-piece chicken meal.png" },
+      { name: "Grilled Chicken", desc: "Light, flame-grilled with herb marinade", price: "KES 750", cat: "chicken",
+        img: "grilled chicken.png" },
+      { name: "Jumbo Shrimp Meal", desc: "12 pieces with cocktail sauce & fries", price: "KES 1,100", cat: "seafood",
+        img: "Jumbo Shrimp Meal.png" },
+      //{ name: "Fish Fillet Sandwich", desc: "Crispy fillet with tartar & lettuce", price: "KES 480", cat: "seafood",
+        //img: "https://www.albaik.com/assets/purpose-5cc1c886a58f78fa7804592c049a3bed849659e43ccad352237f73815e8bfd45.jpg" },
+      { name: "Crispy Fries", desc: "Golden, seasoned, freshly fried", price: "KES 180", cat: "sides",
+        img: "crispy fries.jpg" },
+      { name: "Coleslaw Salad", desc: "Creamy homemade coleslaw", price: "KES 120", cat: "sides",
+        img: "COLESAW.jpg" },
+      //{ name: "Hummus", desc: "Smooth, topped with olive oil & paprika", price: "KES 150", cat: "sides",
+        //img: "https://www.albaik.com/assets/purpose-5cc1c886a58f78fa7804592c049a3bed849659e43ccad352237f73815e8bfd45.jpg" },
+      { name: "Fresh Lemonade", desc: "Squeezed daily, hint of mint", price: "KES 200", cat: "drinks",
+        img: "fresh lemonade.png" },
+      { name: "Mango Juice", desc: "100% fresh-blended mango", price: "KES 220", cat: "drinks",
+        img: "Mango.png" },
+      { name: "Mirinda ", desc: " Mirinda — ice cold", price: "KES 80", cat: "drinks",
+        img: "mirinda.png" },
+    { name: "7 up Icecold", desc: "7Up — ice cold", price: "KES 80", cat: "drinks",
+        img: "7up drink.png" },
+      ];
+
+    function renderMenu(cat) {
+      const grid = document.getElementById('menuGrid');
+      const items = cat === 'all' ? menuItems : menuItems.filter(i => i.cat === cat);
+      grid.innerHTML = items.map(item => `
+        <div class="menu-card" data-cat="${item.cat}">
+          <img class="menu-card-img" src="${item.img}" alt="${item.name}" loading="lazy" />
+          <div class="menu-card-body">
+            <div class="menu-card-name">${item.name}</div>
+            <div class="menu-card-desc">${item.desc}</div>
+            <div class="menu-card-footer">
+              <span class="menu-price">${item.price}</span>
+              <button class="add-btn" onclick="addToCart('${item.name}')">Add +</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterMenu(cat, btn) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      renderMenu(cat);
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `@keyframes fadeInUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }`;
+    document.head.appendChild(style);
+
+    renderMenu('all');
+    updateCartUI();
+  </script>
+</body>
+</html>
