@@ -12,12 +12,12 @@
       --gold:    #C8973A;
       --gold-lt: #E8B558;
       --cream:   #FAF7F2;
-      --dark:    #000000;
-      --mid:     #000000;
+      --dark:    #2a2727;
+      --mid:     #796060;
       --light:   #F0E8D8;
       --white:   #FFFFFF;
-      --text:    #2E1D06;
-      --muted:   #7A6245;
+      --text:    #573a11;
+      --muted:   #77644c;
     }
 
     html { scroll-behavior: smooth; }
@@ -39,7 +39,7 @@
       justify-content: space-between;
       padding: 0 5vw;
       height: 72px;
-      background: rgba(26,18,8,0.92);
+      background: rgba(30, 18, 6, 0.55);
       backdrop-filter: blur(12px);
     }
 
@@ -71,15 +71,38 @@
 
     .nav-links a {
       text-decoration: none;
-      color: rgba(255,255,255,0.85);
-      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 0.82rem;
       font-weight: 500;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      transition: color 0.2s;
+      padding: 0.25rem 0;
+      position: relative;
+      transition: color 0.25s ease;
     }
 
-    .nav-links a:hover { color: var(--gold-lt); }
+    /* animated gold underline */
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 100%;
+      height: 1.5px;
+      background: var(--gold-lt);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-lt);
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
 
     .nav-order {
       background: var(--gold);
@@ -96,7 +119,7 @@
 
     .nav-order:hover { background: var(--gold-lt); }
 
-    /* HERO */
+    /* HERO SLIDESHOW */
     .hero {
       position: relative;
       height: 100vh;
@@ -107,33 +130,64 @@
       overflow: hidden;
     }
 
-    .hero-bg {
+    /* Each slide = full-bleed background */
+    .hero-slide {
       position: absolute;
       inset: 0;
-      background-image: url('https://www.albaik.com/assets/hero/home_hero_new_1400-d5bb20bf4a5a8eaa19d22379497bd57b11272c75d0efab0f86dd34248072a596.jpg');
       background-size: cover;
       background-position: center;
-      transform: scale(1.05);
-      transition: transform 6s ease;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 1.2s ease, transform 7s ease;
+      z-index: 0;
+    }
+    .hero-slide.active {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 1;
+    }
+    .hero-slide.exit {
+      opacity: 0;
+      transform: scale(1.04);
+      z-index: 1;
     }
 
-    .hero:hover .hero-bg { transform: scale(1); }
-
+    /* Dark gradient overlay always on top of slides */
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom,
-        rgba(26,18,8,0.55) 0%,
-        rgba(26,18,8,0.35) 40%,
-        rgba(26,18,8,0.75) 100%
+      z-index: 2;
+      background: linear-gradient(
+        to bottom,
+        rgba(20,12,4,0.45) 0%,
+        rgba(20,12,4,0.25) 40%,
+        rgba(20,12,4,0.72) 100%
       );
     }
 
+    /* Content sits above everything */
     .hero-content {
       position: relative;
+      z-index: 3;
       text-align: center;
       padding: 0 1.5rem;
-      max-width: 800px;
+      max-width: 820px;
+    }
+
+    /* Slide text panels — only active one is visible */
+    .slide-text {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    .slide-text.active {
+      display: flex;
+      animation: slideTextIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes slideTextIn {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .hero-eyebrow {
@@ -142,30 +196,28 @@
       text-transform: uppercase;
       color: var(--gold-lt);
       font-weight: 500;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
     }
 
     .hero-title {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(3.2rem, 4.5vw, 7rem);
-      font-weight: 600;
+      font-size: clamp(2.8rem, 5vw, 6.5rem);
+      font-weight: 700;
       color: var(--white);
-      line-height: 1;
+      line-height: 1.05;
       letter-spacing: -0.01em;
-      margin-bottom: 1.4rem;
+      margin-bottom: 1.2rem;
     }
 
     .hero-title span { color: var(--gold-lt); }
 
     .hero-sub {
       font-size: 1.05rem;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.78);
       font-weight: 300;
-      line-height: 1.6;
-      margin-bottom: 2.4rem;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
+      line-height: 1.65;
+      margin-bottom: 2.2rem;
+      max-width: 500px;
     }
 
     .hero-cta {
@@ -173,6 +225,87 @@
       gap: 1rem;
       flex-wrap: wrap;
       justify-content: center;
+    }
+
+    /* Slide indicators */
+    .hero-indicators {
+      position: absolute;
+      bottom: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    .hero-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s, transform 0.3s, width 0.3s;
+    }
+    .hero-dot.active {
+      background: var(--gold);
+      width: 26px;
+      border-radius: 4px;
+      transform: none;
+    }
+
+    /* Scroll cue */
+    .hero-scroll {
+      position: absolute;
+      bottom: 5rem;
+      right: 3rem;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.45);
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(200,151,58,0.7), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.2); }
+    }
+
+    /* Slide progress bar */
+    .hero-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      z-index: 4;
+      overflow: hidden;
+    }
+    .hero-progress-bar {
+      height: 100%;
+      background: var(--gold);
+      width: 0%;
+      animation: progressFill 6s linear infinite;
+      transform-origin: left;
+    }
+    @keyframes progressFill {
+      0%   { width: 0%; }
+      95%  { width: 100%; }
+      100% { width: 100%; }
+    }
+
+    @media (max-width: 600px) {
+      .hero-scroll { display: none; }
     }
 
     .btn-primary {
@@ -187,7 +320,6 @@
       text-decoration: none;
       transition: background 0.2s, transform 0.15s;
     }
-
     .btn-primary:hover { background: var(--gold-lt); transform: translateY(-1px); }
 
     .btn-outline {
@@ -202,35 +334,7 @@
       text-decoration: none;
       transition: border-color 0.2s, color 0.2s;
     }
-
     .btn-outline:hover { border-color: var(--gold-lt); color: var(--gold-lt); }
-
-    .hero-scroll {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      color: rgba(255,255,255,0.5);
-      font-size: 0.7rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .scroll-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, rgba(200,151,58,0.7), transparent);
-      animation: scrollPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.4; transform: scaleY(1); }
-      50% { opacity: 1; transform: scaleY(1.2); }
-    }
 
     section { padding: 6rem 5vw; }
 
@@ -1034,16 +1138,89 @@
   </div>
 
   <section class="hero" id="home">
-    <div class="hero-bg"></div>
+
+    <!-- 5 background slides (food images) -->
+    <div class="hero-slide active" style="background-image:url('https://www.albaik.com/assets/hero/home_hero_new_1400-d5bb20bf4a5a8eaa19d22379497bd57b11272c75d0efab0f86dd34248072a596.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('Chicken Fillet Burger.png')"></div>
+    <div class="hero-slide" style="background-image:url('Jumbo Shrimp Meal.png')"></div>
+    <div class="hero-slide" style="background-image:url('4-Piece Chicken Meal.png')"></div>
+    <div class="hero-slide" style="background-image:url('Fresh Lemonade.png')"></div>
+
     <div class="hero-overlay"></div>
+
     <div class="hero-content">
-      <p class="hero-eyebrow">Welcome to Raha Restaurant</p>
-      <h1 class="hero-title">Fast Food.<span>Great Taste.</span> Pure Raha.</h1>
-      <p class="hero-sub">Authentic flavours, crafted with love, bringing warmth and comfort to your table since 2010.</p>
-      <div class="hero-cta">
-        <a href="#menu" class="btn-primary">Explore Menu</a>
-        <a href="#story" class="btn-outline">Our Story</a>
+
+      <!-- Slide 1 -->
+      <div class="slide-text active">
+        <p class="hero-eyebrow">Welcome to Raha Restaurant</p>
+        <h1 class="hero-title">Fast Food.<br><span>Great Taste.</span><br>Pure Raha.</h1>
+        <p class="hero-sub">Authentic flavours, crafted with love — bringing warmth and comfort to your table since 2010.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn-primary">Explore Menu</a>
+          <a href="#story" class="btn-outline">Our Story</a>
+        </div>
       </div>
+
+      <!-- Slide 2 -->
+      <div class="slide-text">
+        <p class="hero-eyebrow">Fan Favourite</p>
+        <h1 class="hero-title">Chicken Fillet<br><span>Burger</span></h1>
+        <p class="hero-sub">Juicy fillet, creamy garlic sauce, fresh-baked bun. One bite and you'll never look back.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn-primary">Order Now</a>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="slide-text">
+        <p class="hero-eyebrow">From the Sea</p>
+        <h1 class="hero-title">Jumbo Shrimp<br><span>Meal</span></h1>
+        <p class="hero-sub">Twelve hand-picked shrimp, golden-fried and served with cocktail sauce and crispy fries.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn-primary">Order Now</a>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="slide-text">
+        <p class="hero-eyebrow">A Full Feast</p>
+        <h1 class="hero-title">4-Piece<br><span>Chicken Meal</span></h1>
+        <p class="hero-sub">Perfectly broasted chicken, crispy fries, coleslaw, and garlic sauce — everything you need.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn-primary">Order Now</a>
+        </div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="slide-text">
+        <p class="hero-eyebrow">Cool & Refreshing</p>
+        <h1 class="hero-title">Fresh-Squeezed<br><span>Lemonade</span></h1>
+        <p class="hero-sub">Made daily with real lemons and a hint of mint. The perfect companion to any Raha meal.</p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn-primary">See Drinks</a>
+        </div>
+      </div>
+
+    </div><!-- /.hero-content -->
+
+    <!-- Dot indicators -->
+    <div class="hero-indicators">
+      <button class="hero-dot active" onclick="goToSlide(0)"></button>
+      <button class="hero-dot" onclick="goToSlide(1)"></button>
+      <button class="hero-dot" onclick="goToSlide(2)"></button>
+      <button class="hero-dot" onclick="goToSlide(3)"></button>
+      <button class="hero-dot" onclick="goToSlide(4)"></button>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="hero-progress">
+      <div class="hero-progress-bar" id="heroProgressBar"></div>
     </div>
 
   </section>
@@ -1150,7 +1327,7 @@
     <div class="exp-card">
       <div class="exp-img-wrap">
         <img
-          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
+          src="Delivery.png"
           alt="Fast home delivery"
           class="exp-img"
         />
@@ -1159,7 +1336,7 @@
       <div class="exp-card-body">
         <span class="exp-number">03</span>
         <h3>Home Delivery</h3>
-        <p>Enjoy Raha from the comfort of your home. Fast, reliable delivery across Nairobi — hot meals at your door.</p>
+        <p>Enjoy Raha from the comfort of your home. Fast, reliable delivery across Mombasa — hot meals at your door.</p>
       </div>
     </div>
 
@@ -1200,7 +1377,7 @@
     <div class="contact-grid">
       <div class="contact-item">
         <div class="contact-item-label">Phone</div>
-        <div class="contact-item-value">+254 700 123 456</div>
+        <div class="contact-item-value">+254 700 547 456</div>
       </div>
       <div class="contact-item">
         <div class="contact-item-label">Location</div>
@@ -1231,7 +1408,69 @@
   </footer>
 
   <script>
-   
+    /* ── HERO SLIDESHOW ─────────────────────────────────────────────────── */
+    const slides     = document.querySelectorAll('.hero-slide');
+    const texts      = document.querySelectorAll('.slide-text');
+    const dots       = document.querySelectorAll('.hero-dot');
+    let   current    = 0;
+    let   autoTimer  = null;
+    const INTERVAL   = 6000; // ms between slides
+
+    function goToSlide(index) {
+      // Exit current slide
+      slides[current].classList.remove('active');
+      slides[current].classList.add('exit');
+      texts[current].classList.remove('active');
+      dots[current].classList.remove('active');
+
+      // After exit transition completes, clean up exit class
+      const prev = current;
+      setTimeout(() => {
+        slides[prev].classList.remove('exit');
+      }, 1300);
+
+      // Activate new slide
+      current = (index + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      texts[current].classList.add('active');
+      dots[current].classList.add('active');
+
+      // Restart progress bar
+      const bar = document.getElementById('heroProgressBar');
+      if (bar) {
+        bar.style.animation = 'none';
+        bar.offsetWidth; // reflow
+        bar.style.animation = 'progressFill 6s linear infinite';
+      }
+
+      // Restart auto timer
+      resetAutoAdvance();
+    }
+
+    function nextSlide() {
+      goToSlide(current + 1);
+    }
+
+    function resetAutoAdvance() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(nextSlide, INTERVAL);
+    }
+
+    // Pause on hover so users can read slide content
+    const heroEl = document.querySelector('.hero');
+    heroEl.addEventListener('mouseenter', () => clearInterval(autoTimer));
+    heroEl.addEventListener('mouseleave', () => resetAutoAdvance());
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') goToSlide(current + 1);
+      if (e.key === 'ArrowLeft')  goToSlide(current - 1);
+    });
+
+    // Kick off auto-advance
+    resetAutoAdvance();
+    /* ──────────────────────────────────────────────────────────────────── */
+
     let cart = {}; 
 
     function toggleCart() {
