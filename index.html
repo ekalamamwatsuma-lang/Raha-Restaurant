@@ -9,15 +9,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --gold:    #C8973A;
-      --gold-lt: #E8B558;
-      --cream:   #FAF7F2;
-      --dark:    #2a2727;
-      --mid:     #796060;
-      --light:   #F0E8D8;
+      /* Restaurant palette: deep wine + warm gold + terracotta + cream
+         Appetizing warm tones (per UI/UX Pro Max restaurant guidance) */
+      --gold:    #D4A24C;   /* warm honey gold */
+      --gold-lt: #F2C572;   /* sunlit gold accent */
+      --accent:  #B5402A;   /* terracotta / paprika — appetite */
+      --cream:   #FBF6EC;   /* warm off-white */
+      --dark:    #2A130C;   /* deep espresso / wine */
+      --mid:     #5C2A1E;   /* rich roasted brown */
+      --light:   #EFE4CE;   /* sand */
       --white:   #FFFFFF;
-      --text:    #573a11;
-      --muted:   #77644c;
+      --text:    #3D1F10;   /* deep cocoa text */
+      --muted:   #7A5A3F;   /* warm muted */
     }
 
     html { scroll-behavior: smooth; }
@@ -182,13 +185,39 @@
     }
     .slide-text.active {
       display: flex;
-      animation: slideTextIn 0.9s cubic-bezier(0.22,1,0.36,1) both;
     }
 
-    @keyframes slideTextIn {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* Staggered entrance for hero children */
+    .slide-text.active .hero-eyebrow { animation: heroRise 0.9s cubic-bezier(0.22,1,0.36,1) 0.05s both; }
+    .slide-text.active .hero-title   { animation: heroRise 1.1s cubic-bezier(0.22,1,0.36,1) 0.20s both; }
+    .slide-text.active .hero-sub     { animation: heroRise 1.0s cubic-bezier(0.22,1,0.36,1) 0.45s both; }
+    .slide-text.active .hero-cta     { animation: heroRise 1.0s cubic-bezier(0.22,1,0.36,1) 0.65s both; }
+    .slide-text.active .hero-title span {
+      background: linear-gradient(90deg, var(--gold-lt), var(--gold), var(--gold-lt));
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: goldShimmer 6s ease-in-out infinite;
     }
+
+    @keyframes heroRise {
+      0%   { opacity: 0; transform: translateY(36px); filter: blur(6px); }
+      60%  { filter: blur(0); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    @keyframes goldShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50%      { background-position: 100% 50%; }
+    }
+
+    /* Gentle floating cue for whole hero content */
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    .hero-content { animation: heroFloat 8s ease-in-out infinite; }
 
     .hero-eyebrow {
       font-size: 0.78rem;
@@ -490,15 +519,29 @@
     .menu-card {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 4px;
+      border-radius: 6px;
       overflow: hidden;
-      transition: transform 0.25s, border-color 0.25s;
       cursor: pointer;
+      position: relative;
+      opacity: 0;
+      transform: translateY(40px);
+      transition:
+        transform 0.5s cubic-bezier(0.22,1,0.36,1),
+        opacity 0.6s ease,
+        border-color 0.3s ease,
+        box-shadow 0.35s ease;
+    }
+
+    .menu-card.in-view {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .menu-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(200,151,58,0.5);
+      transform: translateY(-8px);
+      border-color: rgba(242, 197, 114, 0.55);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.45),
+                  0 0 0 1px rgba(242,197,114,0.15);
     }
 
     .menu-card-img {
@@ -507,6 +550,95 @@
       object-fit: cover;
       display: block;
       background: rgba(255,255,255,0.04);
+      transition: transform 0.7s cubic-bezier(0.22,1,0.36,1),
+                  filter 0.5s ease;
+    }
+
+    .menu-card:hover .menu-card-img {
+      transform: scale(1.07);
+      filter: brightness(1.05) saturate(1.1);
+    }
+
+    /* Menu header reveal */
+    .menu-header {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22,1,0.36,1);
+    }
+    .menu-header.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Tab underline glow on hover */
+    .tab { position: relative; overflow: hidden; }
+    .tab::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg,
+        transparent 0%,
+        rgba(242,197,114,0.25) 50%,
+        transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+    .tab:hover::before { transform: translateX(100%); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .menu-card, .menu-header, .hero-content,
+      .slide-text.active .hero-eyebrow,
+      .slide-text.active .hero-title,
+      .slide-text.active .hero-sub,
+      .slide-text.active .hero-cta {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+    /* Mobile: shorter durations, smaller distances, no blur */
+    @media (max-width: 768px) {
+      @keyframes heroRise {
+        0%   { opacity: 0; transform: translateY(18px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+      .slide-text.active .hero-eyebrow { animation: heroRise 0.55s cubic-bezier(0.22,1,0.36,1) 0.03s both; }
+      .slide-text.active .hero-title   { animation: heroRise 0.65s cubic-bezier(0.22,1,0.36,1) 0.12s both; }
+      .slide-text.active .hero-sub     { animation: heroRise 0.55s cubic-bezier(0.22,1,0.36,1) 0.22s both; }
+      .slide-text.active .hero-cta     { animation: heroRise 0.55s cubic-bezier(0.22,1,0.36,1) 0.32s both; }
+
+      .hero-content { animation: none; }
+
+      .hero-slide {
+        transition: opacity 0.8s ease, transform 5s ease;
+      }
+
+      .menu-card {
+        transform: translateY(24px);
+        transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
+                    opacity 0.4s ease,
+                    border-color 0.25s ease,
+                    box-shadow 0.25s ease;
+      }
+      .menu-card:hover {
+        transform: translateY(-4px);
+      }
+      .menu-card-img {
+        transition: transform 0.45s cubic-bezier(0.22,1,0.36,1),
+                    filter 0.35s ease;
+      }
+
+      .menu-header {
+        transform: translateY(16px);
+        transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22,1,0.36,1);
+      }
+
+      .tab::before {
+        transition: transform 0.4s ease;
+      }
     }
 
     .menu-card-body {
@@ -561,125 +693,304 @@
       margin-top: 3rem;
     }
 
-    /* EXPERIENCE */
+    /* ========== EXPERIENCE (editorial storyboard) ========== */
     .experience {
-      background: var(--cream);
-      padding: 6rem 5vw;
+      background:
+        radial-gradient(1200px 600px at 85% -10%, rgba(212,162,76,0.10), transparent 60%),
+        radial-gradient(900px 500px at -10% 110%, rgba(181,64,42,0.08), transparent 60%),
+        var(--cream);
+      padding: 7rem 5vw 8rem;
+      position: relative;
+      overflow: hidden;
     }
+    .experience::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(42,19,12,0.04) 1px, transparent 1px);
+      background-size: 100% 56px;
+      pointer-events: none;
+      mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
+    }
+    .exp-head {
+      max-width: 1180px; margin: 0 auto 3.5rem;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem;
+      position: relative;
+    }
+    .exp-head .lead { max-width: 38ch; color: var(--muted); font-size: 0.98rem; line-height: 1.75; }
 
     .exp-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      max-width: 1100px;
-      margin: 3rem auto 0;
-    }
-
-    .exp-card {
-      text-align: center;
-      padding: 2.5rem 1.5rem;
-      border: 1px solid var(--light);
-      border-radius: 4px;
-      background: var(--white);
-      transition: box-shadow 0.25s;
-    }
-
-    .exp-card:hover { box-shadow: 0 8px 40px rgba(200,151,58,0.12); }
-
-    .exp-icon {
-      font-size: 2.2rem;
-      margin-bottom: 1.2rem;
-      display: block;
-    }
-
-    .exp-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--dark);
-      margin-bottom: 0.7rem;
-    }
-
-    .exp-card p {
-      font-size: 0.88rem;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .gallery-section {
-      padding: 0;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: 300px 300px;
-    }
-
-    .gallery-item {
-      overflow: hidden;
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2.25rem;
       position: relative;
     }
 
+    .exp-row {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      align-items: stretch;
+      gap: 2.5rem;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(212,162,76,0.22);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 18px 50px -28px rgba(42,19,12,0.35);
+      transition: transform .4s ease, box-shadow .4s ease, border-color .4s ease;
+    }
+    .exp-row:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 28px 70px -30px rgba(42,19,12,0.45);
+      border-color: rgba(212,162,76,0.45);
+    }
+    .exp-row.reverse { grid-template-columns: 1fr 1.05fr; }
+    .exp-row.reverse .exp-media { order: 2; }
+    .exp-row.reverse .exp-body  { order: 1; }
+
+    .exp-media {
+      position: relative;
+      min-height: 320px;
+      overflow: hidden;
+    }
+    .exp-media img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 1.2s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+      filter: saturate(1.05);
+    }
+    .exp-row:hover .exp-media img { transform: scale(1.06); }
+    .exp-media::after {
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(180deg, transparent 55%, rgba(26,18,8,0.55) 100%),
+        linear-gradient(120deg, rgba(212,162,76,0.18), transparent 50%);
+      pointer-events: none;
+    }
+    .exp-chip {
+      position: absolute; left: 1.1rem; bottom: 1.1rem;
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: #fbf6ec; background: rgba(42,19,12,0.55);
+      padding: 0.45rem 0.8rem; border: 1px solid rgba(212,162,76,0.5);
+      border-radius: 999px; backdrop-filter: blur(4px);
+    }
+
+    .exp-body {
+      padding: 2.6rem 2.4rem;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative;
+    }
+    .exp-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.4rem; line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1.2px var(--gold);
+      letter-spacing: 0.02em;
+      margin-bottom: 1rem;
+    }
+    .exp-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.85rem; font-weight: 700;
+      color: var(--dark); margin-bottom: 0.9rem; line-height: 1.15;
+    }
+    .exp-body p {
+      color: var(--muted); font-size: 0.98rem; line-height: 1.8;
+      margin-bottom: 1.4rem;
+    }
+    .exp-meta {
+      display: flex; flex-wrap: wrap; gap: 0.55rem;
+    }
+    .exp-meta span {
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--dark);
+      padding: 0.45rem 0.75rem;
+      border: 1px solid rgba(42,19,12,0.18);
+      border-radius: 999px;
+      background: rgba(212,162,76,0.10);
+    }
+
+    /* ========== GALLERY (bento mosaic w/ captions) ========== */
+    .gallery-wrap {
+      background: var(--dark);
+      padding: 6rem 5vw 7rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .gallery-wrap::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(800px 400px at 10% 0%, rgba(212,162,76,0.18), transparent 60%),
+        radial-gradient(700px 400px at 100% 100%, rgba(181,64,42,0.18), transparent 60%);
+      pointer-events: none;
+    }
+    .gallery-head {
+      max-width: 1180px; margin: 0 auto 2.5rem;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem;
+      position: relative;
+    }
+    .gallery-head .section-tag { color: var(--gold-lt); }
+    .gallery-head .section-title { color: #fbf6ec; }
+    .gallery-head .lead { color: rgba(251,246,236,0.7); max-width: 36ch; font-size: 0.95rem; line-height: 1.75; }
+
+    .gallery-section {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: 170px;
+      gap: 14px;
+      position: relative;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      border: 1px solid rgba(212,162,76,0.18);
+      isolation: isolate;
+    }
     .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-      display: block;
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.9s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+      filter: brightness(0.92) saturate(1.08);
     }
+    .gallery-item:hover img { transform: scale(1.08); filter: brightness(1) saturate(1.15); }
 
-    .gallery-item:hover img { transform: scale(1.07); }
-
-    .gallery-item.tall { grid-row: span 2; }
-
-    .gallery-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(26,18,8,0.5) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.3s;
+    .gallery-item .gallery-overlay {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(180deg, transparent 45%, rgba(20,8,4,0.85) 100%);
+      opacity: 0.85;
+      transition: opacity 0.35s ease;
     }
-
     .gallery-item:hover .gallery-overlay { opacity: 1; }
 
-    .contact-section {
-      background: var(--mid);
-      padding: 6rem 5vw;
-      text-align: center;
+    .gallery-caption {
+      position: absolute; left: 14px; right: 14px; bottom: 12px;
+      z-index: 2; color: #fbf6ec;
+      transform: translateY(8px); opacity: 0;
+      transition: transform .45s ease, opacity .45s ease;
+    }
+    .gallery-item:hover .gallery-caption { transform: translateY(0); opacity: 1; }
+    .gallery-caption .gc-tag {
+      display: inline-block;
+      font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold-lt);
+      border: 1px solid rgba(212,162,76,0.5);
+      padding: 0.25rem 0.55rem; border-radius: 999px;
+      margin-bottom: 0.4rem; background: rgba(20,8,4,0.45);
+    }
+    .gallery-caption .gc-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-weight: 600; line-height: 1.2;
     }
 
-    .contact-section .section-title.light { margin-bottom: 1rem; }
+    /* bento spans */
+    .gallery-item.g-1 { grid-column: span 3; grid-row: span 2; } /* hero */
+    .gallery-item.g-2 { grid-column: span 3; grid-row: span 1; }
+    .gallery-item.g-3 { grid-column: span 2; grid-row: span 1; }
+    .gallery-item.g-4 { grid-column: span 1; grid-row: span 1; }
+    .gallery-item.g-5 { grid-column: span 2; grid-row: span 2; }
+    .gallery-item.g-6 { grid-column: span 4; grid-row: span 1; }
+
+    .contact-section {
+      position: relative;
+      isolation: isolate;
+      padding: 7rem 5vw;
+      text-align: center;
+      background-image:
+        linear-gradient(180deg,
+          rgba(20, 8, 4, 0.82) 0%,
+          rgba(42, 19, 12, 0.78) 50%,
+          rgba(20, 8, 4, 0.92) 100%),
+        url('raha-cta-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      overflow: hidden;
+    }
+
+    /* Subtle gold vignette glow */
+    .contact-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center,
+        rgba(212, 162, 76, 0.18) 0%,
+        transparent 55%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .contact-section .section-title.light {
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.4);
+    }
 
     .contact-sub {
-      color: rgba(255,255,255,0.6);
-      font-size: 1rem;
-      max-width: 460px;
-      margin: 0 auto 3rem;
-      line-height: 1.7;
+      color: rgba(255,255,255,0.78);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto 3.5rem;
+      line-height: 1.75;
     }
 
     .contact-grid {
       display: flex;
-      gap: 3rem;
+      gap: 2.5rem;
       justify-content: center;
       flex-wrap: wrap;
       margin-bottom: 3rem;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .contact-item {
       color: var(--white);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(242, 197, 114, 0.18);
+      backdrop-filter: blur(6px);
+      padding: 1.4rem 2rem;
+      border-radius: 10px;
+      min-width: 200px;
+      transition: border-color 0.25s, transform 0.25s, background 0.25s;
+    }
+
+    .contact-item:hover {
+      border-color: rgba(242, 197, 114, 0.5);
+      background: rgba(255, 255, 255, 0.07);
+      transform: translateY(-3px);
     }
 
     .contact-item-label {
       font-size: 0.7rem;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--gold-lt);
       font-weight: 600;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
     .contact-item-value {
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .contact-section .btn-primary {
+      box-shadow: 0 12px 32px rgba(181, 64, 42, 0.35),
+                  0 0 0 1px rgba(242, 197, 114, 0.3);
+      padding: 1rem 2.6rem;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+      .contact-section {
+        background-attachment: scroll;
+        padding: 5rem 5vw;
+      }
     }
     
     .app-section {
@@ -987,113 +1298,33 @@
     @media (max-width: 900px) {
       .story { grid-template-columns: 1fr; gap: 3rem; }
       .story-badge { right: 1rem; bottom: -1rem; }
-      .exp-grid { grid-template-columns: 1fr; }
-      .gallery-section { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
-      .gallery-item.tall { grid-row: span 1; }
+      .exp-head, .gallery-head { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .exp-row, .exp-row.reverse { grid-template-columns: 1fr; }
+      .exp-row.reverse .exp-media { order: 0; }
+      .exp-row.reverse .exp-body  { order: 1; }
+      .exp-media { min-height: 240px; }
+      .exp-body { padding: 1.8rem 1.6rem 2rem; }
+      .gallery-section { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+      .gallery-item.g-1, .gallery-item.g-2, .gallery-item.g-3,
+      .gallery-item.g-4, .gallery-item.g-5, .gallery-item.g-6 {
+        grid-column: span 2; grid-row: span 1;
+      }
+      .gallery-item.g-1 { grid-row: span 2; }
       nav .nav-links { display: none; }
     }
 
     @media (max-width: 600px) {
       .gallery-section { grid-template-columns: 1fr; }
+      .gallery-item.g-1, .gallery-item.g-2, .gallery-item.g-3,
+      .gallery-item.g-4, .gallery-item.g-5, .gallery-item.g-6 {
+        grid-column: span 1; grid-row: span 1;
+      }
       .contact-grid { gap: 2rem; }
       footer { flex-direction: column; text-align: center; }
       .footer-links { flex-wrap: wrap; justify-content: center; }
     }
 
-.experience {
-  background: var(--cream);
-  padding: 6rem 5vw;
-}
-
-.exp-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 3rem auto 0;
-}
-
-.exp-card {
-  background: var(--white);
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid var(--light);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.exp-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(200, 151, 58, 0.15);
-}
-
-.exp-img-wrap {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
-}
-
-.exp-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.5s ease;
-}
-
-.exp-card:hover .exp-img {
-  transform: scale(1.06);
-}
-
-.exp-img-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 40%,
-    rgba(26, 18, 8, 0.45) 100%
-  );
-}
-
-.exp-card-body {
-  padding: 1.6rem 1.5rem 1.8rem;
-  position: relative;
-}
-
-.exp-number {
-  display: block;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
-}
-
-.exp-card-body h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--dark);
-  margin-bottom: 0.6rem;
-}
-
-.exp-card-body p {
-  font-size: 0.88rem;
-  color: var(--muted);
-  line-height: 1.75;
-}
-
-@media (max-width: 900px) {
-  .exp-grid {
-    grid-template-columns: 1fr;
-    max-width: 480px;
-  }
-
-  .exp-img-wrap {
-    height: 200px;
-  }
-}
+/* legacy exp-card block removed — redesigned above */
   </style>
 </head>
 <body>
@@ -1155,7 +1386,10 @@
         <p class="hero-eyebrow">Welcome to Raha Restaurant</p>
         <h1 class="hero-title">Fast Food.<br><span>Great Taste.</span><br>Pure Raha.</h1>
         <p class="hero-sub">Authentic flavours, crafted with love — bringing warmth and comfort to your table since 2010.</p>
-      
+        <div class="hero-cta">
+          <a href="#menu" class="btn-primary">Explore Menu</a>
+          <a href="#story" class="btn-outline">Our Story</a>
+        </div>
       </div>
 
       <!-- Slide 2 -->
@@ -1283,89 +1517,129 @@
   </section>
   
 <section class="experience" id="experience">
-  <div style="text-align:center;margin-bottom:0.5rem;">
-    <p class="section-tag">Why Raha</p>
-    <h2 class="section-title">The Raha Experience</h2>
+  <div class="exp-head">
+    <div>
+      <p class="section-tag">Why Raha</p>
+      <h2 class="section-title">The Raha Experience</h2>
+    </div>
+    <p class="lead">Three rituals that define every plate we serve — from the marinade room to your doorstep in Mombasa.</p>
   </div>
+
   <div class="exp-grid">
 
-    <div class="exp-card">
-      <div class="exp-img-wrap">
-        <img
-          src="https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=600&q=80"
-          alt="Signature Broast Chicken"
-          class="exp-img"
-        />
-        <div class="exp-img-overlay"></div>
+    <article class="exp-row">
+      <div class="exp-media">
+        <img src="https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=900&q=80" alt="Signature Broast Chicken" />
+        <span class="exp-chip">Signature</span>
       </div>
-      <div class="exp-card-body">
-        <span class="exp-number">01</span>
-        <h3>Signature Broast</h3>
-        <p>Our perfectly broasted chicken is crispy outside, juicy inside — marinated for 24 hours using our secret spice blend.</p>
+      <div class="exp-body">
+        <div class="exp-number">01</div>
+        <h3>The 24-Hour Broast</h3>
+        <p>Marinated for a full day in our family spice blend, pressure-broasted to a crackling gold crust and a juicy, tender centre. The dish Mombasa keeps coming back for.</p>
+        <div class="exp-meta">
+          <span>Slow Marinade</span><span>House Spice</span><span>Crispy · Juicy</span>
+        </div>
       </div>
-    </div>
+    </article>
 
-    <div class="exp-card">
-      <div class="exp-img-wrap">
-        <img
-          src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80"
-          alt="Fresh ingredients daily"
-          class="exp-img"
-        />
-        <div class="exp-img-overlay"></div>
+    <article class="exp-row reverse">
+      <div class="exp-media">
+        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&q=80" alt="Fresh ingredients daily" />
+        <span class="exp-chip">Daily Fresh</span>
       </div>
-      <div class="exp-card-body">
-        <span class="exp-number">02</span>
-        <h3>Fresh Every Day</h3>
-        <p>We prepare our sauces, salads, and sides fresh daily. No frozen shortcuts — only honest, wholesome ingredients.</p>
+      <div class="exp-body">
+        <div class="exp-number">02</div>
+        <h3>Made Fresh, Every Morning</h3>
+        <p>Sauces stirred at dawn, salads chopped to order, sides pulled straight from the kitchen — never the freezer. Honest ingredients, treated with respect.</p>
+        <div class="exp-meta">
+          <span>No Freezer</span><span>Locally Sourced</span><span>Daily Prep</span>
+        </div>
       </div>
-    </div>
+    </article>
 
-    <div class="exp-card">
-      <div class="exp-img-wrap">
-        <img
-          src="Delivery.png"
-          alt="Fast home delivery"
-          class="exp-img"
-        />
-        <div class="exp-img-overlay"></div>
+    <article class="exp-row">
+      <div class="exp-media">
+        <img src="Delivery.png" alt="Fast home delivery" />
+        <span class="exp-chip">Delivery</span>
       </div>
-      <div class="exp-card-body">
-        <span class="exp-number">03</span>
-        <h3>Home Delivery</h3>
-        <p>Enjoy Raha from the comfort of your home. Fast, reliable delivery across Mombasa — hot meals at your door.</p>
+      <div class="exp-body">
+        <div class="exp-number">03</div>
+        <h3>Hot at Your Door</h3>
+        <p>Insulated packaging and a tight delivery radius mean your meal lands as warm and crisp as it left our kitchen. Order ahead, eat in peace.</p>
+        <div class="exp-meta">
+          <span>Mombasa-wide</span><span>Heat-Sealed</span><span>Live Tracking</span>
+        </div>
       </div>
-    </div>
+    </article>
 
   </div>
 </section>
 
-  <div class="gallery-section">
-    <div class="gallery-item tall">
-      <img src="Pepsi.png" />
-      <div class="gallery-overlay"></div>
+<section class="gallery-wrap" id="gallery">
+  <div class="gallery-head">
+    <div>
+      <p class="section-tag">Gallery</p>
+      <h2 class="section-title">A Taste of Raha</h2>
     </div>
-    <div class="gallery-item">
-      <img src="Fresh Lemonade.png" alt="Kitchen heritage" />
-      <div class="gallery-overlay"></div>
-    </div>
-    <div class="gallery-item">
-      <img src="Jumbo Shrimp Meal.png" alt="Our purpose" />
-      <div class="gallery-overlay"></div>
-    </div>
-    <div class="gallery-item">
-      <img src="Chicken Fillet Burger.png" alt="Food spread" style="filter:brightness(0.7) saturate(1.2);" />
-      <div class="gallery-overlay"></div>
-    </div>
-    <div class="gallery-item">
-      <img src="COLESAW.jpg" alt="Dining experience" style="filter:brightness(0.85);" />
-      <div class="gallery-overlay"></div>
-    </div>
-    <div class="gallery-item">
-      <img src="7up drink.png" alt="Dining experience" style="filter:brightness(0.85);" />
-      <div class="gallery-overlay"></div>
-    </div>
+    <p class="lead">A glimpse of the plates, the pours and the moments that fill our dining room.</p>
   </div>
+
+  <div class="gallery-section">
+    <figure class="gallery-item g-1">
+      <img src="Jumbo Shrimp Meal.png" alt="Jumbo shrimp signature plate" />
+      <div class="gallery-overlay"></div>
+      <figcaption class="gallery-caption">
+        <span class="gc-tag">Signature</span>
+        <div class="gc-title">Jumbo Shrimp Platter</div>
+      </figcaption>
+    </figure>
+
+    <figure class="gallery-item g-2">
+      <img src="Chicken Fillet Burger.png" alt="Chicken fillet burger" />
+      <div class="gallery-overlay"></div>
+      <figcaption class="gallery-caption">
+        <span class="gc-tag">House Favourite</span>
+        <div class="gc-title">Chicken Fillet Burger</div>
+      </figcaption>
+    </figure>
+
+    <figure class="gallery-item g-3">
+      <img src="Fresh Lemonade.png" alt="Fresh lemonade" />
+      <div class="gallery-overlay"></div>
+      <figcaption class="gallery-caption">
+        <span class="gc-tag">Sip</span>
+        <div class="gc-title">Fresh Mint Lemonade</div>
+      </figcaption>
+    </figure>
+
+    <figure class="gallery-item g-4">
+      <img src="Pepsi.png" alt="Iced Pepsi" />
+      <div class="gallery-overlay"></div>
+      <figcaption class="gallery-caption">
+        <span class="gc-tag">Cold</span>
+        <div class="gc-title">Pepsi · Iced</div>
+      </figcaption>
+    </figure>
+
+    <figure class="gallery-item g-5">
+      <img src="COLESAW.jpg" alt="Creamy coleslaw side" />
+      <div class="gallery-overlay"></div>
+      <figcaption class="gallery-caption">
+        <span class="gc-tag">Side</span>
+        <div class="gc-title">House Coleslaw</div>
+      </figcaption>
+    </figure>
+
+    <figure class="gallery-item g-6">
+      <img src="7up drink.png" alt="7up cold drink" />
+      <div class="gallery-overlay"></div>
+      <figcaption class="gallery-caption">
+        <span class="gc-tag">Refresh</span>
+        <div class="gc-title">7Up · Chilled</div>
+      </figcaption>
+    </figure>
+  </div>
+</section>
 
   <section class="contact-section" id="contact">
     <p class="section-tag" style="color:var(--gold-lt);">Get in Touch</p>
@@ -1611,6 +1885,8 @@
           </div>
         </div>
       `).join('');
+      // Staggered scroll-reveal for newly rendered cards
+      requestAnimationFrame(() => observeMenuCards());
     }
 
     function filterMenu(cat, btn) {
@@ -1619,9 +1895,31 @@
       renderMenu(cat);
     }
 
-    const style = document.createElement('style');
-    style.textContent = `@keyframes fadeInUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }`;
-    document.head.appendChild(style);
+    // --- Scroll reveal observer (menu cards + headers) ---
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const revealStagger = isMobile ? 40 : 70;
+    const revealMaxDelay = isMobile ? 350 : 600;
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const idx = Number(el.dataset.revealIndex || 0);
+          el.style.transitionDelay = `${Math.min(idx * revealStagger, revealMaxDelay)}ms`;
+          el.classList.add('in-view');
+          revealObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    function observeMenuCards() {
+      document.querySelectorAll('.menu-card:not(.in-view)').forEach((card, i) => {
+        card.dataset.revealIndex = i % 12;
+        revealObserver.observe(card);
+      });
+    }
+
+    document.querySelectorAll('.menu-header').forEach(h => revealObserver.observe(h));
 
     renderMenu('all');
     updateCartUI();
