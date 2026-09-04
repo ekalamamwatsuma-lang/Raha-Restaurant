@@ -6,7 +6,8 @@
     <title>Raha Restaurant Nyali | Broast Chicken & Burgers in Mombasa</title>
     <meta
       name="description"
-      content="Raha Restaurant in Nyali, Mombasa — crispy broast chicken, burgers, shrimp and fresh juices. Build your order and send it straight to us on WhatsApp." />
+      content="Raha Restaurant in Nyali, Mombasa — crispy broast chicken, burgers, shrimp and fresh juices. Build your order and send it straight to us on WhatsApp."
+    />
     <link rel="canonical" href="/" />
     <meta property="og:type" content="restaurant" />
     <meta property="og:title" content="Raha Restaurant Nyali | Broast Chicken & Burgers" />
@@ -23,8 +24,8 @@
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="responsive.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -49,9 +50,7 @@
 
     <header class="nav">
       <div class="container nav-inner">
-    <a class="nav-logo" href="#top">
-    <img src="Raha logo.png" alt="Raha Logo">
-</a>
+        <a class="nav-logo" href="#top">Raha</a>
         <nav class="nav-links" aria-label="Main">
           <a href="#menu">Menu</a>
           <a href="#deals">Deals</a>
@@ -84,6 +83,10 @@
       <section class="hero" id="top">
         <div class="hero-slides" id="heroSlides"></div>
         <div class="container hero-content" id="heroContent"></div>
+        <div class="hero-controls container">
+          <div class="hero-dots" id="heroDots"></div>
+          <button class="hero-pause" id="heroPause" type="button">Pause slideshow</button>
+        </div>
       </section>
 
       <section class="section" id="bestsellers">
@@ -110,7 +113,7 @@
         <div class="container">
           <p class="section-tag">Better together</p>
           <h2 class="section-title">Combo deals</h2>
-          <p class="section-lead">Bundles of our favourites, add everything in one tap.</p>
+          <p class="section-lead">Bundles of our favourites — add everything in one tap.</p>
           <div class="deal-grid" id="dealsGrid"></div>
         </div>
       </section>
@@ -128,7 +131,7 @@
             <article class="step reveal">
               <span class="step-num">2</span>
               <h3>Send on WhatsApp</h3>
-              <p>Your cart becomes a ready-made message, just hit send.</p>
+              <p>Your cart becomes a ready-made message — just hit send.</p>
             </article>
             <article class="step reveal">
               <span class="step-num">3</span>
@@ -201,8 +204,8 @@
         <nav class="footer-links" aria-label="Footer">
           <a href="#menu">Menu</a>
           <a href="#contact">Contact</a>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
+          <a href="pages/privacy.html">Privacy</a>
+          <a href="pages/terms.html">Terms</a>
         </nav>
       </div>
     </footer>
@@ -216,7 +219,16 @@
       </div>
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-foot" id="cartFoot" hidden>
+        <fieldset class="delivery">
+          <legend>Delivery (optional)</legend>
+          <label><input type="radio" name="delivery" value="pickup" checked /><span>Pickup / collect</span><b>KES 0</b></label>
+          <label><input type="radio" name="delivery" value="nyali" /><span>Delivery around Nyali</span><b>KES 50</b></label>
+          <label><input type="radio" name="delivery" value="outskirts" /><span>Nyali outskirts</span><b>KES 100</b></label>
+        </fieldset>
+        <div class="cart-sub"><span>Subtotal</span><span id="cartSubtotal">KES 0</span></div>
+        <div class="cart-sub" id="cartFeeRow" hidden><span>Delivery fee</span><span id="cartFee">KES 0</span></div>
         <div class="cart-total"><span>Total</span><strong id="cartTotal">KES 0</strong></div>
+
         <a class="btn btn-wa" id="whatsappBtn" href="#" target="_blank" rel="noopener"
           >Send order on WhatsApp</a
         >
@@ -250,9 +262,9 @@
 
     <div class="toast-region" id="toasts" role="status" aria-live="polite"></div>
 
-    <script src="data.js"></script>
-    <script src="cart.js"></script>
-    <script src="main.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
     </script>
