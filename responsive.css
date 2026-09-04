@@ -1,23 +1,64 @@
 /* ============================================================
    Raha Restaurant — responsive + motion preferences
-   Mobile-first checks at 320 / 375 / 390 / 414 / 768
-   ============================================================ */
-
-@media (max-width: 900px) {
-  .nav-links,
-  .nav-order {
-    display: none;
+@media (max-width: 800px) {
+  .nav {
+    height: 68px;
   }
+
+  .nav-inner {
+    padding-inline: 16px;
+  }
+
+  .nav-logo img {
+    height: 40px;
+  }
+
   .nav-toggle {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
   }
-  .story {
-    grid-template-columns: 1fr;
+
+  .nav-links {
+    position: fixed;
+    top: 68px;
+    left: 0;
+    right: 0;
+
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+
+    padding: 1rem 1.25rem 1.5rem;
+
+    background: rgba(23, 21, 19, 0.98);
+    backdrop-filter: blur(18px);
+
+    border-bottom: 1px solid rgba(196, 154, 90, 0.18);
+  }
+
+  .nav-links.is-open {
+    display: flex;
+  }
+
+  .nav-links a {
+    padding: 0.9rem 0.25rem;
+    font-size: 0.78rem;
+  }
+
+  .nav-links a::after {
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .nav-links a:hover::after,
+  .nav-links a[aria-current="true"]::after {
+    transform: scaleX(1);
+  }
+
+  .nav-actions {
+    display: none;
   }
 }
-
 @media (max-width: 768px) {
   :root {
     --nav-h: 62px;
