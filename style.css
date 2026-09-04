@@ -1,37 +1,23 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css");
 
 :root {
-  /* Primary */
-  --dark: #171513;        /* Deep charcoal */
-  --mid: #3A332D;         /* Warm charcoal-brown */
+  --gold: #d4a24c;
+  --gold-lt: #f2c572;
+  --accent: #b5402a;
+  --cream: #fbf6ec;
+  --dark: #2a130c;
+  --mid: #5c2a1e;
+  --light: #efe4ce;
+  --white: #ffffff;
+  --text: #3d1f10;
+  --muted: #6b4a30;
 
-  /* Brand accent */
-  --accent: #B85C38;      /* Burnt terracotta */
-  --accent-dark: #91452B;
-
-  /* Luxury accent */
-  --gold: #C49A5A;        /* Muted brass */
-  --gold-lt: #E1C58A;
-
-  /* Backgrounds */
-  --cream: #F7F2E8;       /* Warm ivory */
-  --light: #E9E0D2;       /* Soft beige */
-  --white: #FFFFFF;
-
-  /* Typography */
-  --text: #29231F;
-  --muted: #756B61;
-
-  /* UI */
   --radius: 14px;
   --radius-sm: 10px;
-
-  --shadow-sm: 0 2px 10px rgba(23, 21, 19, 0.08);
-  --shadow-md: 0 10px 30px rgba(23, 21, 19, 0.14);
-
+  --shadow-sm: 0 2px 10px rgba(42, 19, 12, 0.08);
+  --shadow-md: 0 10px 30px rgba(42, 19, 12, 0.14);
   --nav-h: 68px;
   --maxw: 1200px;
-
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
