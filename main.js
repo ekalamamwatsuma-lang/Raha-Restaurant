@@ -18,7 +18,60 @@
       { once: true },
     );
   }
+const cards = document.querySelectorAll(".menu-card");
 
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("reveal");
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, {
+  threshold: 0.18,
+  rootMargin: "0px 0px -8% 0px"
+});
+
+cards.forEach(card => revealObserver.observe(card));
+
+const focusObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    entry.target.classList.toggle("in-focus", entry.isIntersecting);
+  });
+}, {
+  threshold: 0.55,
+  rootMargin: "-20% 0px -20% 0px"
+});
+
+cards.forEach(card => focusObserver.observe(card));
+
+let ticking = false;
+
+window.addEventListener("scroll", () => {
+  if (ticking) return;
+
+  requestAnimationFrame(() => {
+    document.querySelectorAll(
+      ".menu-card .card-image img, .menu-card .card-media img"
+    ).forEach(img => {
+      const card = img.closest(".menu-card");
+      if (!card) return;
+
+      const rect = card.getBoundingClientRect();
+      const offset =
+        (window.innerHeight / 2 - rect.top) * 0.025;
+
+      img.style.setProperty(
+        "--parallax-y",
+        `${offset}px`
+      );
+    });
+
+    ticking = false;
+  });
+
+  ticking = true;
+});
   /* ---------------- Hero carousel ---------------- */
   function initHero() {
     const track = $("#heroSlides");
