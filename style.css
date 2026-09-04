@@ -1,3 +1,5 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css");
+
 :root {
   --gold: #d4a24c;
   --gold-lt: #f2c572;
@@ -1328,4 +1330,31 @@ a.contact-value:hover {
 }
 .legal ul {
   padding-left: 1.2rem;
+}
+
+
+/* ---------- Animate.css integration ---------- */
+/*
+  Add animate.css classes to any element you want animated, for example:
+  class="animate__animated animate__fadeInUp"
+
+  The helpers below provide convenient project-specific animation hooks.
+*/
+.animate-on-scroll {
+  --animate-duration: 0.8s;
+}
+
+.animate-on-scroll.animate__animated {
+  animation-duration: var(--animate-duration);
+  animation-fill-mode: both;
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .animate__animated,
+  .animate-on-scroll {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
