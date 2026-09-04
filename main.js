@@ -430,7 +430,12 @@
       modal.close();
     });
   }
-
+window.addEventListener("scroll", () => {
+  document.querySelector(".nav")?.classList.toggle(
+    "scrolled",
+    window.scrollY > 30
+  );
+});
   /* ---------------- Contact links ---------------- */
   function initContact() {
     const c = RAHA.contact;
