@@ -1,0 +1,87 @@
+/* ============================================================
+   Raha Restaurant — responsive + motion preferences
+   Mobile-first checks at 320 / 375 / 390 / 414 / 768
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .nav-links,
+  .nav-order {
+    display: none;
+  }
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .story {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --nav-h: 62px;
+  }
+  .hero {
+    min-height: 78vh;
+  }
+  .hero-content {
+    padding-bottom: 5.5rem;
+  }
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+  .card-body {
+    padding: 0.75rem 0.8rem 0.9rem;
+  }
+  .card-foot {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .add-btn {
+    width: 100%;
+  }
+  body {
+    padding-bottom: 0;
+  }
+  body[data-cart-active="true"] {
+    padding-bottom: 78px;
+  }
+}
+
+@media (max-width: 380px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+  .cart-pill .cart-pill-text {
+    display: none;
+  }
+  .nav-logo img {
+    height: 32px;
+  }
+}
+
+@media (min-width: 769px) {
+  .sticky-bar {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
