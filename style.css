@@ -662,13 +662,18 @@ h3 {
   /* Scroll animation base state */
   opacity: 0;
   visibility: hidden;
+
+  /* Keep hover effects smooth without overriding Animate.css transforms */
+  transition:
+    box-shadow 0.3s ease;
 }
 
-/* Card becomes visible while its Animate.css animation runs */
+/* Activated by the scroll-direction JavaScript */
 .card.scroll-animated {
-  visibility: visible;
   opacity: 1;
+  visibility: visible;
 }
+
 /* Animated gold perimeter */
 .card::before {
   content: "";
@@ -700,6 +705,15 @@ h3 {
   background: var(--color-secondary);
 }
 
+/* Menu cards are animated with Animate.css:
+   scrolling down  -> animate__slideInUp
+   scrolling up    -> animate__slideInDown
+   JavaScript adds/removes .scroll-animated and Animate.css classes. */
+.card.reveal,
+.card.in-view {
+  opacity: 1;
+  visibility: visible;
+}
 
 .card:hover {
   transform: translateY(-4px);
@@ -1696,4 +1710,3 @@ a.contact-value:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
