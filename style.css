@@ -658,16 +658,17 @@ h3 {
   transform-style: preserve-3d;
   perspective: 1000px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+
+  /* Scroll animation base state */
   opacity: 0;
   visibility: hidden;
-  transform: translateY(24px);
-  transition:
-    opacity 0.5s ease,
-    visibility 0.5s ease,
-    transform 0.5s var(--ease-standard),
-    box-shadow 0.3s ease;
 }
 
+/* Card becomes visible while its Animate.css animation runs */
+.card.scroll-animated {
+  visibility: visible;
+  opacity: 1;
+}
 /* Animated gold perimeter */
 .card::before {
   content: "";
@@ -699,12 +700,6 @@ h3 {
   background: var(--color-secondary);
 }
 
-.card.reveal,
-.card.in-view {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
 
 .card:hover {
   transform: translateY(-4px);
