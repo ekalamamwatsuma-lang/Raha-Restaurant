@@ -22,15 +22,12 @@
   /* ---------------- Hero carousel ---------------- */
   function initHero() {
     const track = $("#heroSlides");
-    const dotsWrap = $("#heroDots");
     const content = $("#heroContent");
-    const pauseBtn = $("#heroPause");
     if (!track) return;
 
     const slides = RAHA.heroSlides;
     let index = 0;
     let timer = null;
-    let playing = !reduceMotion;
 
     track.innerHTML = slides
       .map(
@@ -43,20 +40,9 @@
       .join("");
     $$("#heroSlides img").forEach(imgFallback);
 
-    dotsWrap.innerHTML = slides
-      .map(
-        (s, i) =>
-          `<button class="hero-dot" type="button" data-i="${i}" aria-current="${i === 0}">
-             <span class="sr-only">Show slide ${i + 1}</span></button>`,
-      )
-      .join("");
-
     function paint() {
       $$("#heroSlides .hero-slide").forEach((el, i) =>
         el.setAttribute("data-active", String(i === index)),
-      );
-      $$("#heroDots .hero-dot").forEach((el, i) =>
-        el.setAttribute("aria-current", String(i === index)),
       );
       const s = slides[index];
       content.innerHTML = `
@@ -78,33 +64,13 @@
     }
 
     function play() {
-      stop();
+      clearInterval(timer);
       if (reduceMotion) return;
       timer = setInterval(() => go(index + 1), 6500);
-      playing = true;
-      pauseBtn.textContent = "Pause slideshow";
     }
-    function stop() {
-      clearInterval(timer);
-      timer = null;
-      playing = false;
-      pauseBtn.textContent = "Play slideshow";
-    }
-
-    dotsWrap.addEventListener("click", (e) => {
-      const btn = e.target.closest(".hero-dot");
-      if (!btn) return;
-      go(Number(btn.dataset.i));
-      stop();
-    });
-    pauseBtn.addEventListener("click", () => (playing ? stop() : play()));
 
     paint();
-    if (reduceMotion) {
-      stop();
-    } else {
-      play();
-    }
+    play();
   }
 
   /* ---------------- Product cards ---------------- */
@@ -270,8 +236,15 @@
     $$("img", list).forEach(imgFallback);
 
     foot.hidden = false;
+    const fee = Cart.deliveryFee();
+    $("#cartSubtotal").textContent = money(Cart.subtotal());
+    $("#cartFeeRow").hidden = fee === 0;
+    $("#cartFee").textContent = money(fee);
     $("#cartTotal").textContent = money(total);
+    const radio = drawer.querySelector(`input[name="delivery"][value="${Cart.deliveryKey()}"]`);
+    if (radio) radio.checked = true;
     $("#whatsappBtn").href = Cart.whatsappUrl();
+
   }
 
   /* ---------------- Product modal ---------------- */
@@ -380,7 +353,13 @@
       Cart.clear();
       toast("Cart cleared");
     });
+    drawer.addEventListener("change", (e) => {
+      const r = e.target.closest('input[name="delivery"]');
+      if (r) Cart.setDelivery(r.value);
+    });
+
     $("#whatsappBtn").addEventListener("click", (e) => {
+
       const url = Cart.whatsappUrl();
       if (!url) {
         e.preventDefault();
@@ -430,12 +409,7 @@
       modal.close();
     });
   }
-window.addEventListener("scroll", () => {
-  document.querySelector(".nav")?.classList.toggle(
-    "scrolled",
-    window.scrollY > 30
-  );
-});
+
   /* ---------------- Contact links ---------------- */
   function initContact() {
     const c = RAHA.contact;
