@@ -659,16 +659,16 @@ h3 {
   perspective: 1000px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
 
-  /* Scroll animation base state */
-  opacity: 0;
-  visibility: hidden;
+  /* Scroll animation fallback state */
+  opacity: 1;
+  visibility: visible;
 
-  /* Keep hover effects smooth without overriding Animate.css transforms */
-  transition:
-    box-shadow 0.3s ease;
+  /* The scroll-driven animation below controls opacity/transform.
+     Keep hover limited to shadow so the two effects never fight. */
+  transition: box-shadow 0.3s ease;
 }
 
-/* Activated by the scroll-direction JavaScript */
+/* JavaScript fallback / compatibility hook */
 .card.scroll-animated {
   opacity: 1;
   visibility: visible;
@@ -705,10 +705,7 @@ h3 {
   background: var(--color-secondary);
 }
 
-/* Menu cards are animated with Animate.css:
-   scrolling down  -> animate__slideInUp
-   scrolling up    -> animate__slideInDown
-   JavaScript adds/removes .scroll-animated and Animate.css classes. */
+/* Menu cards remain compatible with the existing .reveal/.in-view hooks. */
 .card.reveal,
 .card.in-view {
   opacity: 1;
@@ -716,7 +713,8 @@ h3 {
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  /* Individual translate does not fight the scroll-driven transform. */
+  translate: 0 -4px;
   box-shadow: var(--shadow-lg), 0 0 24px rgba(196, 154, 90, 0.14);
 }
 
@@ -1479,17 +1477,59 @@ a.contact-value:hover {
   box-shadow: var(--shadow-md);
 }
 
-/* ---------- Reveal ---------- */
+/* ---------- Scroll Reveal ---------- */
+/*
+  Scroll-driven reveal:
+  - The animation follows the element's visibility in the viewport.
+  - It naturally reverses when the user scrolls back up.
+  - No scroll event listener is required for supported browsers.
+  - A normal visible state is kept as the fallback for older browsers.
+*/
 .reveal {
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 0.5s ease,
-    transform 0.5s ease;
+  opacity: 1;
+  transform: none;
 }
+
 .reveal.in-view {
   opacity: 1;
   transform: none;
+}
+
+@supports (animation-timeline: view()) {
+  .card,
+  .reveal {
+    animation-name: fadeUp;
+    animation-duration: 1ms;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+  }
+
+  /* The menu cards get a slightly softer scale than the original 0.5
+     example so the menu feels polished rather than overly zoomed. */
+  .card {
+    --scroll-reveal-distance: 40px;
+    --scroll-reveal-scale: 0.92;
+  }
+
+  .reveal {
+    --scroll-reveal-distance: 30px;
+    --scroll-reveal-scale: 0.96;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(var(--scroll-reveal-distance, 40px))
+        scale(var(--scroll-reveal-scale, 0.92));
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 }
 
 /* ---------- Legal pages ---------- */
@@ -1691,6 +1731,19 @@ a.contact-value:hover {
   animation-fill-mode: both;
 }
 
+/* Ensure the scroll-driven animation never traps content for users or browsers
+   where motion should be reduced. */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .reveal {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    animation: none !important;
+    animation-timeline: none !important;
+  }
+}
+
 /* Respect users who prefer reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -1710,3 +1763,14 @@ a.contact-value:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
+  .card,
+  .reveal {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    translate: none !important;
+    animation: none !important;
+    animation-timeline: none !important;
+  }
+}
