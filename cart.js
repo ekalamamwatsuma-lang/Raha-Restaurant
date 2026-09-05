@@ -2,7 +2,15 @@
 
 (function () {
   const KEY = "raha_cart_v1";
+  const DKEY = "raha_delivery_v1";
   const listeners = [];
+
+  /* Optional delivery fees (KES). Pickup is free. */
+  const DELIVERY = {
+    pickup: { label: "Pickup / collect", fee: 0 },
+    nyali: { label: "Delivery around Nyali", fee: 50 },
+    outskirts: { label: "Delivery to Nyali outskirts", fee: 100 },
+  };
 
   function load() {
     try {
@@ -17,12 +25,20 @@
   function save(state) {
     try {
       localStorage.setItem(KEY, JSON.stringify(state));
+      localStorage.setItem(DKEY, delivery);
     } catch (e) {
       /* storage unavailable — cart still works for this session */
     }
   }
 
   let state = load();
+  let delivery = "pickup";
+  try {
+    const d = localStorage.getItem(DKEY);
+    if (d && DELIVERY[d]) delivery = d;
+  } catch (e) {
+    /* ignore */
+  }
 
   function product(id) {
     return RAHA.products.find((p) => p.id === id);
@@ -33,6 +49,7 @@
     const snap = Cart.lines();
     listeners.forEach((fn) => fn(snap));
   }
+
 
   const Cart = {
     onChange(fn) {
@@ -51,8 +68,25 @@
     count() {
       return Cart.lines().reduce((s, l) => s + l.qty, 0);
     },
-    total() {
+    subtotal() {
       return Cart.lines().reduce((s, l) => s + l.lineTotal, 0);
+    },
+    deliveryOptions() {
+      return DELIVERY;
+    },
+    deliveryKey() {
+      return delivery;
+    },
+    setDelivery(key) {
+      if (!DELIVERY[key]) return;
+      delivery = key;
+      emit();
+    },
+    deliveryFee() {
+      return DELIVERY[delivery].fee;
+    },
+    total() {
+      return Cart.subtotal() + Cart.deliveryFee();
     },
     add(id, qty) {
       if (!product(id)) return;
@@ -81,12 +115,20 @@
       const body = lines
         .map((l) => `${l.qty} × ${l.name} — ${RAHA.money(l.lineTotal)}`)
         .join("\n");
+      const fee = Cart.deliveryFee();
+      const d = DELIVERY[delivery];
+      const feeLine = fee
+        ? `\n\n${d.label} — ${RAHA.money(fee)}`
+        : "\n\nPickup / collect — no delivery fee";
       const msg =
         "Hello Raha 👋\n\nI'd like to order:\n\n" +
         body +
+        `\n\nSubtotal: ${RAHA.money(Cart.subtotal())}` +
+        feeLine +
         `\n\nTotal: ${RAHA.money(Cart.total())}\n\nPlease confirm my order.\n\nThank you!`;
       return `https://wa.me/${RAHA.contact.whatsapp}?text=${encodeURIComponent(msg)}`;
     },
+
   };
 
   RAHA.Cart = Cart;
