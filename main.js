@@ -420,7 +420,73 @@
         (a.href = `https://wa.me/${c.whatsapp}?text=${encodeURIComponent("Hello Raha 👋 I'd like to place an order.")}`),
     );
   }
+   
+document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".card");
 
+  if (!cards.length) return;
+
+  let lastScrollY = window.scrollY;
+  let scrollDirection = "down";
+
+  // Detect scroll direction
+  window.addEventListener(
+    "scroll",
+    () => {
+      const currentScrollY = window.scrollY;
+
+      scrollDirection = currentScrollY > lastScrollY ? "down" : "up";
+      lastScrollY = currentScrollY;
+    },
+    { passive: true }
+  );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const card = entry.target;
+
+        if (entry.isIntersecting) {
+          // Remove previous animation classes
+          card.classList.remove(
+            "animate__animated",
+            "animate__slideInUp",
+            "animate__slideInDown"
+          );
+
+          // Force browser reflow so animation can restart
+          void card.offsetWidth;
+
+          // Animate based on scroll direction
+          card.classList.add(
+            "animate__animated",
+            scrollDirection === "down"
+              ? "animate__slideInUp"
+              : "animate__slideInDown",
+            "scroll-animated"
+          );
+        } else {
+          // Reset when card leaves viewport so it can animate again
+          card.classList.remove(
+            "animate__animated",
+            "animate__slideInUp",
+            "animate__slideInDown",
+            "scroll-animated"
+          );
+
+          card.style.opacity = "0";
+          card.style.visibility = "hidden";
+        }
+      });
+    },
+    {
+      threshold: 0.15,
+      rootMargin: "0px 0px -40px 0px"
+    }
+  );
+
+  cards.forEach((card) => observer.observe(card));
+});
   document.addEventListener("DOMContentLoaded", () => {
     initNav();
     initHero();
