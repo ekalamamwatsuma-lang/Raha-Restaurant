@@ -5,8 +5,8 @@
 window.RAHA = window.RAHA || {};
 
 RAHA.contact = {
-  phoneDisplay: "+254 700 547 456",
-  phoneHref: "tel:+254700547456",
+  phoneDisplay: "+254 7081287268",
+  phoneHref: "tel:+254 7081287268",
   orderPhoneDisplay: "+254 791 511 386",
   orderPhoneHref: "tel:+254791511386",
   whatsapp: "254791511386",
@@ -149,7 +149,7 @@ RAHA.heroSlides = [
     alt: "4-Piece broasted chicken meal with fries and coleslaw",
     eyebrow: "Nyali, Mombasa · Since 2010",
     title: "Mombasa's Crispy <span>Chicken Fix</span>",
-    sub: "Freshly prepared. Crispy. Hot. Pure Raha — ordered in seconds on WhatsApp.",
+    sub: "Freshly prepared. Crispy. Hot. Pure Raha. Ordered in seconds on WhatsApp.",
   },
   {
     image: "Chicken Fillet Burger.png",
