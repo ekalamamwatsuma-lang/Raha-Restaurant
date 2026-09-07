@@ -497,7 +497,7 @@ h3 {
   display: grid;
   align-items: end;
   overflow: hidden;
-
+background: var(--dark);
 }
 
 .hero-slides {
